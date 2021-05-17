@@ -9,7 +9,6 @@ from queue import Queue
 from threading import Thread
 
 from orthos2.data.models import ServerConfig
-from django.utils import timezone
 
 from . import Priority
 from .models import BaseTask, DailyTask, SingleTask, Task
@@ -43,7 +42,7 @@ class TaskExecuter(Thread):
         for dailytask in dailytasks:
             if dailytask.executed_at.date() < today:
                 if now.time() > ServerConfig.objects.get_daily_execution_time():
-                    dailytask.executed_at = timezone.now()
+                    dailytask.executed_at = datetime.now()
                     dailytask.running = True
                     dailytask.save()
                     self.queue[dailytask.priority].put(dailytask)
